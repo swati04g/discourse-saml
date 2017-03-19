@@ -47,10 +47,8 @@ class SamlAuthenticator < ::Auth::OAuth2Authenticator
 
     result.email = auth[:info].email || uid
     result.email_valid = true
-
-    if result.respond_to?(:skip_email_validation) && GlobalSetting.try(:saml_skip_email_validation)
-      result.skip_email_validation = true
-    end
+    result.skip_email_validation = true
+    
 
     current_info = ::PluginStore.get("saml", "saml_user_#{uid}")
     if current_info
@@ -147,7 +145,7 @@ HTML_FORM
 end
 
 title = GlobalSetting.try(:saml_title) || "SAML"
-button_title = GlobalSetting.try(:saml_button_title) || GlobalSetting.try(:saml_title) || "with SAML"
+button_title = GlobalSetting.try(:saml_button_title) || GlobalSetting.try(:saml_title) || "Login with SAML"
 
 auth_provider :title => button_title,
               :authenticator => SamlAuthenticator.new('saml'),
